@@ -84,11 +84,19 @@ export default function Home() {
         flexDirection: 'column',
         minHeight: '100vh',
         backgroundColor: '#2F4F4F',
-        px: { xs: 2, sm: 3, md: 4 }, // Responsive padding
       }}
     >
-      <AppBar position="static" sx={{ bgcolor: '#3E2723' }}>
-        <Toolbar sx={{ flexDirection: { xs: 'column', sm: 'row' } }}>
+      {/* Header */}
+      <AppBar 
+        position="static" 
+        sx={{ 
+          bgcolor: '#3E2723', 
+          width: '100vw', 
+          left: 0, 
+          marginLeft: 'calc(-50vw + 50%)', 
+        }}
+      >
+        <Toolbar sx={{ flexDirection: { xs: 'column', sm: 'row' }, px: { xs: 2, sm: 4 } }}>
           <Typography variant="h6" sx={{ flexGrow: 1, color: 'white', textAlign: { xs: 'center', sm: 'left' } }}>
             🥕 MyPantry
           </Typography>
@@ -98,6 +106,7 @@ export default function Home() {
         </Toolbar>
       </AppBar>
       
+      {/* Main Content */}
       <Box 
         flexGrow={1}
         display="flex"
@@ -106,6 +115,7 @@ export default function Home() {
         alignItems="center"
         gap={2}
         mt={2}
+        px={{ xs: 2, sm: 4 }}  // Responsive padding
       >
         <Stack 
           direction={{ xs: 'column', sm: 'row' }} // Responsive direction
@@ -277,6 +287,7 @@ export default function Home() {
         </Box>
       </Box>
 
+      {/* Footer */}
       <Box
         component="footer"
         sx={{
@@ -285,7 +296,9 @@ export default function Home() {
           mt: 'auto',
           backgroundColor: '#3E2723',
           color: 'white',
-          width: '100%',
+          width: '100vw',
+          left: 0,
+          marginLeft: 'calc(-50vw + 50%)',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -297,14 +310,9 @@ export default function Home() {
           MyPantry © {new Date().getFullYear()}
         </Typography>
         <Typography variant="body2" sx={{ color: 'white' }}>
-          GitHub: mzsami
+          Built with Material-UI
         </Typography>
       </Box>
     </Box>
   )
 }
-
-
-
-
-
