@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { AppBar, Toolbar, Typography, Button, Box, Stack, Modal, TextField } from '@mui/material'
+import { AppBar, Toolbar, Typography, Button, Box, Stack, Modal, TextField, InputBase, Paper } from '@mui/material'
 import { firestore } from '@/firebase'
 import {
   collection,
@@ -12,11 +12,11 @@ import {
   getDoc,
 } from 'firebase/firestore'
 
-// Main functionality
 export default function Home() {
   const [inventory, setInventory] = useState([]);
   const [open, setOpen] = useState(false);
   const [itemName, setItemName] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const updateInventory = async () => {
     const snapshot = query(collection(firestore, 'inventory'));
@@ -43,7 +43,7 @@ export default function Home() {
       await setDoc(docRef, { name: item, quantity: 1 });
     }
     
-    await updateInventory(); // Ensure inventory is updated after adding an item
+    await updateInventory();
   }
 
   const removeItem = async (item) => {
@@ -59,7 +59,7 @@ export default function Home() {
       }
     }
     
-    await updateInventory(); // Ensure inventory is updated after adding an item
+    await updateInventory();
   }
 
   useEffect(() => {
@@ -69,28 +69,34 @@ export default function Home() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  // Basic UI
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredInventory = inventory.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
+        backgroundColor: '#2F4F4F',
       }}
     >
-      {/* Header */}
-      <AppBar position="static">
+      <AppBar position="static" sx={{ bgcolor: '#3E2723' }}>
         <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Inventory Management
+          <Typography variant="h6" sx={{ flexGrow: 1, color: 'white' }}>
+            🥕 MyPantry
           </Typography>
-          <Button color="inherit">Home</Button>
-          <Button color="inherit">About</Button>
-          <Button color="inherit">Contact</Button>
+          <Button color="inherit" sx={{ color: 'white' }} onClick={() => document.getElementById('inventory-section').scrollIntoView({ behavior: 'smooth' })}>
+            Inventory
+          </Button>
         </Toolbar>
       </AppBar>
       
-      {/* Main content */}
       <Box 
         flexGrow={1}
         display="flex"
@@ -100,7 +106,43 @@ export default function Home() {
         gap={2}
         mt={2}
       >
-        {/* Adding Items */}
+        <Stack 
+          direction="row" 
+          spacing={2} 
+          alignItems="center" 
+          sx={{ bgcolor: '#3E2723', padding: '1em', borderRadius: '10px' }}
+        >
+          <Paper
+            component="form"
+            sx={{ display: 'flex', alignItems: 'center', width: 400, borderRadius: 1, padding: '0.5em', bgcolor: '#3E2723' }}
+          >
+            <InputBase
+              sx={{ ml: 1, flex: 1, color: 'white' }}
+              placeholder="Search Inventory"
+              inputProps={{ 'aria-label': 'search inventory' }}
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          </Paper>
+
+          <Button
+            variant='contained'
+            sx={{
+              bgcolor: '#388E3C',
+              color: 'white',
+              transition: 'all 0.3s ease-in-out',
+              '&:hover': {
+                bgcolor: '#66BB6A',
+                transform: 'scale(1.1)',
+                boxShadow: '0px 0px 20px rgba(102, 187, 106, 0.5)',
+              },
+            }}
+            onClick={handleOpen}
+          >
+            Add New Item
+          </Button>
+        </Stack>
+
         <Modal open={open} onClose={handleClose}>
           <Box
             position='absolute' 
@@ -108,7 +150,7 @@ export default function Home() {
             left="50%"
             transform="translate(-50%, -50%)"
             width={400}
-            bgcolor="white"
+            bgcolor="#4E342E"
             border="2px solid #000"
             boxShadow={24}
             p={4}
@@ -116,17 +158,27 @@ export default function Home() {
             flexDirection="column"
             gap={3}
           >
-            <Typography variant="h6">Add Item</Typography>
+            <Typography variant="h6" sx={{ color: 'white' }}>Add Item</Typography>
             <Stack width="100%" direction="row" spacing={2}>
               <TextField 
                 variant='outlined'
                 fullWidth
                 value={itemName}
                 onChange={(e) => setItemName(e.target.value)}
+                sx={{ input: { color: 'white' }, '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: 'white' } }, '& .MuiOutlinedInput-root.Mui-focused fieldset': { borderColor: 'white' }}}
               />
               <Button
                 variant='contained'
-                color='primary'
+                sx={{
+                  bgcolor: '#388E3C',
+                  color: 'white',
+                  transition: 'all 0.3s ease-in-out',
+                  '&:hover': {
+                    bgcolor: '#66BB6A',
+                    transform: 'scale(1.1)',
+                    boxShadow: '0px 0px 20px rgba(102, 187, 106, 0.5)',
+                  },
+                }}
                 onClick={() => {
                   addItem(itemName);
                   setItemName('');
@@ -139,30 +191,29 @@ export default function Home() {
           </Box>
         </Modal>
 
-        <Button
-          variant='contained'
-          color='primary'
-          onClick={handleOpen}
-        >
-          Add New Item
-        </Button>
-
-        <Box border="1px solid #333" mt={2}>
+        <Box 
+          id="inventory-section"
+          border="1px solid #3E2723" 
+          mt={2} 
+          width="800px" 
+          borderRadius="10px"
+        > 
           <Box 
-            width="800px" 
             height="100px"
-            bgcolor="#ADD8E6" 
+            bgcolor="#4E342E"
             display='flex'
             alignItems='center'
             justifyContent='center'
+            borderTopLeftRadius="10px"
+            borderTopRightRadius="10px"
           >
-            <Typography variant="h2" color = "#333">
+            <Typography variant="h2" sx={{ color: 'white' }}>
               Inventory Items
             </Typography>
           </Box>
 
-          <Stack width='800px' height='300px' spacing={2} overflow="auto">
-            {inventory.map(({name, quantity}) => (
+          <Stack width='100%' height='300px' spacing={2} overflow="auto" sx={{ padding: 2 }}>
+            {filteredInventory.map(({name, quantity}) => (
               <Box 
                 key={name} 
                 width='100%' 
@@ -170,20 +221,47 @@ export default function Home() {
                 display='flex'
                 alignItems='center' 
                 justifyContent='space-between' 
-                bgcolor='#f0f0f0' 
+                bgcolor='#3E2723'
                 padding={5}
+                borderRadius="10px"
               >
-                <Typography variant='h3' color="#333" textAlign="center">
+                <Typography variant='h3' sx={{ color: 'white', textAlign: 'center' }}>
                   {name ? name[0].toUpperCase() + name.slice(1) : ''}
                 </Typography>
-                <Typography variant='h3' color="#333" textAlign="center">
+                <Typography variant='h3' sx={{ color: 'white', textAlign: 'center' }}>
                   {quantity}
                 </Typography>
                 <Stack direction='row' spacing={2}>
-                  <Button variant='contained' onClick={() => addItem(name)}>
+                  <Button 
+                    variant='contained' 
+                    sx={{
+                      bgcolor: '#388E3C',
+                      color: 'white',
+                      transition: 'all 0.3s ease-in-out',
+                      '&:hover': {
+                        bgcolor: '#66BB6A',
+                        transform: 'scale(1.1)',
+                        boxShadow: '0px 0px 20px rgba(102, 187, 106, 0.5)',
+                      },
+                    }} 
+                    onClick={() => addItem(name)}
+                  >
                     Add
                   </Button>
-                  <Button variant='contained' onClick={() => removeItem(name)}>
+                  <Button 
+                    variant='contained' 
+                    sx={{
+                      bgcolor: '#388E3C',
+                      color: 'white',
+                      transition: 'all 0.3s ease-in-out',
+                      '&:hover': {
+                        bgcolor: '#66BB6A',
+                        transform: 'scale(1.1)',
+                        boxShadow: '0px 0px 20px rgba(102, 187, 106, 0.5)',
+                      },
+                    }} 
+                    onClick={() => removeItem(name)}
+                  >
                     Remove
                   </Button>
                 </Stack>
@@ -193,28 +271,31 @@ export default function Home() {
         </Box>
       </Box>
 
-      {/* Footer */}
       <Box
         component="footer"
         sx={{
           py: 3,
           px: 2,
           mt: 'auto',
-          backgroundColor: (theme) =>
-            theme.palette.mode === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
+          backgroundColor: '#3E2723',
+          color: 'white',
           width: '100%',
-          textAlign: 'center'
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
       >
         <Typography variant="body1">
-          Sami © {new Date().getFullYear()}
+          MyPantry © {new Date().getFullYear()}
         </Typography>
-        <Typography variant="body2" color="textSecondary">
+        <Typography variant="body2" sx={{ color: 'white' }}>
           Built with Material-UI
         </Typography>
       </Box>
     </Box>
   )
 }
+
+
 
 
