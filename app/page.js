@@ -84,11 +84,12 @@ export default function Home() {
         flexDirection: 'column',
         minHeight: '100vh',
         backgroundColor: '#2F4F4F',
+        px: { xs: 2, sm: 3, md: 4 }, // Responsive padding
       }}
     >
       <AppBar position="static" sx={{ bgcolor: '#3E2723' }}>
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1, color: 'white' }}>
+        <Toolbar sx={{ flexDirection: { xs: 'column', sm: 'row' } }}>
+          <Typography variant="h6" sx={{ flexGrow: 1, color: 'white', textAlign: { xs: 'center', sm: 'left' } }}>
             🥕 MyPantry
           </Typography>
           <Button color="inherit" sx={{ color: 'white' }} onClick={() => document.getElementById('inventory-section').scrollIntoView({ behavior: 'smooth' })}>
@@ -107,14 +108,14 @@ export default function Home() {
         mt={2}
       >
         <Stack 
-          direction="row" 
+          direction={{ xs: 'column', sm: 'row' }} // Responsive direction
           spacing={2} 
           alignItems="center" 
-          sx={{ bgcolor: '#3E2723', padding: '1em', borderRadius: '10px' }}
+          sx={{ bgcolor: '#3E2723', padding: '1em', borderRadius: '10px', width: '100%', maxWidth: '800px' }} // Responsive width
         >
           <Paper
             component="form"
-            sx={{ display: 'flex', alignItems: 'center', width: 400, borderRadius: 1, padding: '0.5em', bgcolor: '#3E2723' }}
+            sx={{ display: 'flex', alignItems: 'center', width: '100%', borderRadius: 1, padding: '0.5em', bgcolor: '#3E2723' }}
           >
             <InputBase
               sx={{ ml: 1, flex: 1, color: 'white' }}
@@ -131,6 +132,7 @@ export default function Home() {
               bgcolor: '#388E3C',
               color: 'white',
               transition: 'all 0.3s ease-in-out',
+              width: { xs: '100%', sm: 'auto' }, // Responsive width for button
               '&:hover': {
                 bgcolor: '#66BB6A',
                 transform: 'scale(1.1)',
@@ -149,7 +151,7 @@ export default function Home() {
             top="50%" 
             left="50%"
             transform="translate(-50%, -50%)"
-            width={400}
+            width={{ xs: '90%', sm: 400 }} // Responsive width
             bgcolor="#4E342E"
             border="2px solid #000"
             boxShadow={24}
@@ -195,7 +197,8 @@ export default function Home() {
           id="inventory-section"
           border="1px solid #3E2723" 
           mt={2} 
-          width="800px" 
+          width="100%" 
+          maxWidth="800px" // Responsive max width
           borderRadius="10px"
         > 
           <Box 
@@ -207,12 +210,12 @@ export default function Home() {
             borderTopLeftRadius="10px"
             borderTopRightRadius="10px"
           >
-            <Typography variant="h2" sx={{ color: 'white' }}>
+            <Typography variant="h2" sx={{ color: 'white', fontSize: { xs: '1.5rem', sm: '2rem' } }}> {/* Responsive font size */}
               Inventory Items
             </Typography>
           </Box>
 
-          <Stack width='100%' height='300px' spacing={2} overflow="auto" sx={{ padding: 2 }}>
+          <Stack width='100%' height={{ xs: 'auto', sm: '300px' }} spacing={2} overflow="auto" sx={{ padding: 2 }}>
             {filteredInventory.map(({name, quantity}) => (
               <Box 
                 key={name} 
@@ -224,14 +227,15 @@ export default function Home() {
                 bgcolor='#3E2723'
                 padding={5}
                 borderRadius="10px"
+                sx={{ flexDirection: { xs: 'column', sm: 'row' }, textAlign: { xs: 'center', sm: 'left' } }} // Responsive flex direction and text alignment
               >
-                <Typography variant='h3' sx={{ color: 'white', textAlign: 'center' }}>
+                <Typography variant='h3' sx={{ color: 'white', fontSize: { xs: '1.25rem', sm: '1.75rem' } }}>
                   {name ? name[0].toUpperCase() + name.slice(1) : ''}
                 </Typography>
-                <Typography variant='h3' sx={{ color: 'white', textAlign: 'center' }}>
+                <Typography variant='h3' sx={{ color: 'white', fontSize: { xs: '1.25rem', sm: '1.75rem' } }}>
                   {quantity}
                 </Typography>
-                <Stack direction='row' spacing={2}>
+                <Stack direction='row' spacing={2} sx={{ width: { xs: '100%', sm: 'auto' }, justifyContent: { xs: 'center', sm: 'flex-end' } }}> {/* Responsive width and alignment */}
                   <Button 
                     variant='contained' 
                     sx={{
@@ -243,6 +247,7 @@ export default function Home() {
                         transform: 'scale(1.1)',
                         boxShadow: '0px 0px 20px rgba(102, 187, 106, 0.5)',
                       },
+                      width: { xs: '100%', sm: 'auto' }, // Responsive button width
                     }} 
                     onClick={() => addItem(name)}
                   >
@@ -259,6 +264,7 @@ export default function Home() {
                         transform: 'scale(1.1)',
                         boxShadow: '0px 0px 20px rgba(102, 187, 106, 0.5)',
                       },
+                      width: { xs: '100%', sm: 'auto' }, // Responsive button width
                     }} 
                     onClick={() => removeItem(name)}
                   >
@@ -283,18 +289,21 @@ export default function Home() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
+          flexDirection: { xs: 'column', sm: 'row' }, // Responsive flex direction
+          textAlign: 'left',
         }}
       >
-        <Typography variant="body1">
+        <Typography variant="body1" sx={{ mb: { xs: 1, sm: 0 } }}> {/* Responsive margin bottom */}
           MyPantry © {new Date().getFullYear()}
         </Typography>
         <Typography variant="body2" sx={{ color: 'white' }}>
-          Built with Material-UI
+          GitHub: mzsami
         </Typography>
       </Box>
     </Box>
   )
 }
+
 
 
 
